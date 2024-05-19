@@ -1,0 +1,21 @@
+<!-- <h1 class="text-3xl font-bold underline">Hello world!</h1> -->
+<div class="container">
+  <h1>{{ title }}</h1>
+
+  <div class="flex gap-2">
+    <button class="main-button" mat-raised-button color="primary" color="primary" (click)="startRecognition()">
+      Start
+    </button>
+
+    <button class="main-button" mat-raised-button color="primary" (click)="stopRecognition()">Stop</button>
+  </div>
+
+  <h2>Результаты:</h2>
+  <ul>
+    <li *ngFor="let result of results$ | async">
+      <strong>{{ result.timestamp }}:</strong> {{ result.sentence }}
+    </li>
+  </ul>
+
+  <router-outlet></router-outlet>
+</div>
