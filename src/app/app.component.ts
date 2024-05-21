@@ -1,31 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { RecognitionService } from './services/recognition.service';
-import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { MenuComponent } from './components/menu/menu.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, MatButtonModule],
+  imports: [CommonModule, RouterOutlet, MatButtonModule, MenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'interview-hacker';
-  results$: Observable<any>;
-
-  constructor(private recognitionService: RecognitionService) {
-    this.results$ = this.recognitionService.results$;
-    this.recognitionService.getResults();
-  }
-
-  startRecognition() {
-    this.recognitionService.startRecognition();
-  }
-
-  stopRecognition() {
-    this.recognitionService.stopRecognition();
-  }
-}
+export class AppComponent {}
