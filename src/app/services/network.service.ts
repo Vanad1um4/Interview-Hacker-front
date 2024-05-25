@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
 import { BehaviorSubject, timer, of, Subscription, EMPTY } from 'rxjs';
 import { catchError, switchMap, retry } from 'rxjs/operators';
-import { IncomingPayload, Sentence } from '../shared/interfaces';
+import { IncomingMessage, Sentence } from '../shared/interfaces';
 import { RecognitionService } from './recognition.service';
 
 @Injectable({
@@ -13,6 +13,8 @@ export class NetworkService implements OnDestroy {
   private reconnectDelayMs = 1000; // время задержки между попытками переподключения в случае потери соединения с сервером
   private connectionStatus: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private connectionStatusSubscription: Subscription;
+  private pingInterval: any;
+  private pingIntervalSec: number = 50;
 
   constructor(private recognitionService: RecognitionService) {
     this.connectionStatusSubscription = this.connectionStatus
@@ -49,7 +51,7 @@ export class NetworkService implements OnDestroy {
             },
           }),
           catchError((error) => {
-            this.handleError(error);
+            console.error('WebSocket error:', error);
             return EMPTY;
           }),
         )
@@ -66,31 +68,43 @@ export class NetworkService implements OnDestroy {
         });
 
       this.connectionStatus.next(true);
+      this.startPing();
     }
+  }
+
+  public startPing() {
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+    }
+    this.pingInterval = setInterval(() => {
+      if (this.socket$ && !this.socket$.closed) {
+        this.socket$.next({ request: 'PING' });
+      }
+    }, this.pingIntervalSec * 1000);
   }
 
   private getNewWebSocket() {
     return webSocket('ws://127.0.0.1:8000/api/main/ws');
   }
 
-  private handleMessage(payload: IncomingPayload) {
-    // console.log('Received message:', payload);
-    const key = Object.keys(payload).length === 1 ? Object.keys(payload)[0] : null;
+  private handleMessage(data: IncomingMessage) {
+    // console.log('Received message:', data);
+    const key = Object.keys(data).length === 1 ? Object.keys(data)[0] : null;
 
-    if (key === 'all_sentences' || key === 'sentence') {
-      this.recognitionService.updateSentences(payload[key] as Sentence);
+    if (key === 'sentence') {
+      this.recognitionService.updateSentences(data[key] as Sentence);
     }
-  }
-
-  private handleError(error: any) {
-    console.error('WebSocket error:', error);
-  }
-
-  public sendAction(action: 'start' | 'stop' | 'get_results') {
-    this.socket$?.next({ action });
   }
 
   ngOnDestroy() {
     this.connectionStatusSubscription.unsubscribe();
+
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+    }
+
+    if (this.socket$) {
+      this.socket$.complete();
+    }
   }
 }

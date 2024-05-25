@@ -1,22 +1,36 @@
 <div class="flex h-full gap-2">
   <div class="flex w-full flex-col rounded-md border p-1 shadow-lg">
     <h1 class="text-xl font-[500]">Транскрипт:</h1>
-    <div class="flex flex-col gap-2 overflow-y-auto">
-      @for (sentence of sentencesList; track $index) {
-        <div class="flex gap-2 text-xl">
-          <div class="font-semibold">{{ unixTimeToHumanTime(sentence[0]) }}:</div>
-          <div>{{ sentence[1] }}</div>
-        </div>
-      }
+    <div class="flex flex-col gap-2 overflow-y-auto" #sentencesScrollContainer>
+      <div #dynamicContentWrapper>
+        @for (sentence of sentencesList; track $index) {
+          <div class="flex gap-2 text-xl">
+            <div class="font-semibold">{{ unixTimeToHumanTime(sentence[0]) }}:</div>
+            <div>{{ sentence[1] }}</div>
+          </div>
+        }
+      </div>
     </div>
   </div>
 
   <div class="flex h-full flex-col gap-2 rounded-md border p-1 shadow-lg">
-    <button class="main-button scale-90" mat-fab color="primary" color="primary" (click)="startRecognition()">
+    <button
+      class="main-button scale-90"
+      mat-fab
+      color="primary"
+      (click)="startRecognition()"
+      [disabled]="recognitionService.recognitionInProgress || recognitionService.requestInProgress"
+    >
       <mat-icon class="scale-150">play_arrow</mat-icon>
     </button>
 
-    <button class="main-button scale-90" mat-fab color="warn" (click)="stopRecognition()">
+    <button
+      class="main-button scale-90"
+      mat-fab
+      color="warn"
+      (click)="stopRecognition()"
+      [disabled]="!recognitionService.recognitionInProgress || recognitionService.requestInProgress"
+    >
       <mat-icon class="scale-150">stop</mat-icon>
     </button>
   </div>

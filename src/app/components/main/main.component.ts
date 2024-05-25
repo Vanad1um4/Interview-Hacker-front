@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { NetworkService } from '../../services/network.service';
 import { RecognitionService } from '../../services/recognition.service';
 
 @Component({
@@ -12,13 +11,12 @@ import { RecognitionService } from '../../services/recognition.service';
   templateUrl: './main.component.html',
   // styleUrl: './main.component.scss',
 })
-export class MainComponent {
-  constructor(
-    private networkService: NetworkService,
-    private recognitionService: RecognitionService,
-  ) {
-    this.networkService.sendAction('get_results');
-  }
+export class MainComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('sentencesScrollContainer') private sentencesScrollContainer!: ElementRef;
+  @ViewChild('dynamicContentWrapper') private dynamicContentWrapper!: ElementRef;
+  private resizeObserver!: ResizeObserver;
+
+  constructor(public recognitionService: RecognitionService) {}
 
   get sentencesList() {
     return Object.entries(this.recognitionService.sentences$$());
@@ -30,10 +28,24 @@ export class MainComponent {
   }
 
   startRecognition() {
-    this.networkService.sendAction('start');
+    this.recognitionService.startRecognition();
   }
 
   stopRecognition() {
-    this.networkService.sendAction('stop');
+    this.recognitionService.stopRecognition();
+  }
+
+  ngAfterViewInit() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.sentencesScrollContainer.nativeElement.scrollTo({
+        top: this.sentencesScrollContainer.nativeElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
+    this.resizeObserver.observe(this.dynamicContentWrapper.nativeElement);
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver.disconnect();
   }
 }
