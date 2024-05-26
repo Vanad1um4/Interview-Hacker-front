@@ -9,3 +9,9 @@ export type IncomingMessage = {
 export type RecognitionStatus = {
   [key: string]: string;
 };
+
+export type Settings = {
+  darkTheme: boolean;
+  initLoadLastNMinutes: number;
+  mainPrompt: string;
+};

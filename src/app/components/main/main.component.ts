@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RecognitionService } from '../../services/recognition.service';
 
 @Component({
-  selector: 'app-main-component',
+  selector: 'app-main',
   standalone: true,
   imports: [NgFor, MatButtonModule, MatIconModule],
   templateUrl: './main.component.html',

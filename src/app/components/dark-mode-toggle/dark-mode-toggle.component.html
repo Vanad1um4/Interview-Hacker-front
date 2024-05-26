@@ -1,0 +1,13 @@
+<div class="relative h-9">
+  <button
+    class="main-button relative -top-[2px] scale-90"
+    mat-mini-fab
+    color="primary"
+    (click)="switchTheme()"
+    [disabled]="settingsService.requestInProgress"
+  >
+    <mat-icon class="scale-110">
+      {{ settingsService.settings?.darkTheme ? "dark_mode" : "light_mode" }}
+    </mat-icon>
+  </button>
+</div>

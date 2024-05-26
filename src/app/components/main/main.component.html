@@ -1,7 +1,7 @@
 <div class="flex h-full gap-2">
-  <div class="flex w-full flex-col rounded-md border p-1 shadow-lg">
-    <h1 class="text-xl font-[500]">Транскрипт:</h1>
-    <div class="flex flex-col gap-2 overflow-y-auto" #sentencesScrollContainer>
+  <div class="flex w-full flex-col rounded-md border-2 border-gray-300">
+    <h1 class="px-2 pt-2 text-xl font-[500]">Транскрипт:</h1>
+    <div class="flex flex-col gap-2 overflow-y-auto p-2" #sentencesScrollContainer>
       <div #dynamicContentWrapper>
         @for (sentence of sentencesList; track $index) {
           <div class="flex gap-2 text-xl">
@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div class="flex h-full flex-col gap-2 rounded-md border p-1 shadow-lg">
+  <div class="flex h-full flex-col gap-2 rounded-md border-2 border-gray-300 py-2">
     <button
       class="main-button scale-90"
       mat-fab
@@ -35,7 +35,7 @@
     </button>
   </div>
 
-  <div class="h-full w-full rounded-md border p-1 shadow-lg">
+  <div class="h-full w-full rounded-md border-2 border-gray-300 p-2">
     <h1 class="text-xl font-[500]">ЖПТ:</h1>
   </div>
 </div>

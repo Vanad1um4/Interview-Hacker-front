@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MenuComponent } from './components/menu/menu.component';
 import { NetworkService } from './services/network.service';
 import { RecognitionService } from './services/recognition.service';
+import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,10 @@ export class AppComponent {
   constructor(
     public networkService: NetworkService,
     public recognitionService: RecognitionService,
+    public settingsService: SettingsService,
   ) {
     this.networkService.startPing();
     this.recognitionService.getLastSentences();
+    this.settingsService.loadSettings();
   }
 }
