@@ -8,7 +8,6 @@ import { HttpClient } from '@angular/common/http';
 export class RecognitionService {
   private baseUrl = 'http://127.0.0.1:8000/api/main';
   public sentences$$: WritableSignal<Sentence> = signal({});
-  // public recognitionState$$ = signal(false);
   public recognitionInProgress: boolean = false;
   public requestInProgress: boolean = false;
 
@@ -16,7 +15,6 @@ export class RecognitionService {
 
   public getLastSentences() {
     return this.http.get<IncomingMessage>(`${this.baseUrl}/get_last_sentences`).subscribe((data) => {
-      // console.log('Received response:', data);
       this.updateSentences(data['last_sentences'] as Sentence);
     });
   }

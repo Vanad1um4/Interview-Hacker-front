@@ -32,7 +32,7 @@ export class SettingsService {
         this.settings = settings;
         this.saveSettingsToLocal(settings);
       }),
-      catchError(() => of(this.settings as Settings)), // Возвращаем текущие настройки при ошибке
+      catchError(() => of(this.settings as Settings)),
     );
   }
 
@@ -68,14 +68,14 @@ export class SettingsService {
     );
   }
 
+  private saveSettingsToLocal(settings: Settings): void {
+    localStorage.setItem(this.localStorageKey, JSON.stringify(settings));
+  }
+
   public loadSettings(): void {
     this.getSettings().subscribe((settings: Settings) => {
       this.settings = settings;
       console.log('Settings:', settings);
     });
-  }
-
-  private saveSettingsToLocal(settings: Settings): void {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(settings));
   }
 }
