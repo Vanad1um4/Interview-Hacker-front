@@ -10,6 +10,10 @@ export type RecognitionStatus = {
   [key: string]: string;
 };
 
+export type InferenceData = {
+  [key: string]: string;
+};
+
 export type Settings = {
   darkTheme: boolean;
   initLoadLastNMinutes: number;

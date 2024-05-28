@@ -8,7 +8,7 @@ import { Settings } from '../shared/interfaces';
   providedIn: 'root',
 })
 export class SettingsService {
-  private baseUrl = 'http://127.0.0.1:8000/api/settings/';
+  private baseUrl = 'http://127.0.0.1:8000/api/settings';
   private localStorageKey = 'appSettings';
   public settings: Settings | null = null;
   public requestInProgress: boolean = false;
@@ -26,19 +26,25 @@ export class SettingsService {
     }
   }
 
-  public getSettings(): Observable<Settings> {
-    return this.http.get<Settings>(`${this.baseUrl}`).pipe(
-      tap((settings: Settings) => {
-        this.settings = settings;
-        this.saveSettingsToLocal(settings);
-      }),
-      catchError(() => of(this.settings as Settings)),
-    );
+  public getSettings(): void {
+    this.http
+      .get<Settings>(`${this.baseUrl}/`)
+      .pipe(
+        tap((settings: Settings) => {
+          this.settings = settings;
+          this.saveSettingsToLocal(settings);
+        }),
+        catchError((error) => {
+          console.error('Error fetching settings:', error);
+          return of(this.settings as Settings);
+        }),
+      )
+      .subscribe();
   }
 
   public postSettings(settings: Settings): Observable<Settings> {
     this.requestInProgress = true;
-    return this.http.post<Settings>(`${this.baseUrl}`, settings).pipe(
+    return this.http.post<Settings>(`${this.baseUrl}/main`, settings).pipe(
       tap((savedSettings: Settings) => {
         this.settings = savedSettings;
         this.saveSettingsToLocal(savedSettings);
@@ -53,7 +59,7 @@ export class SettingsService {
 
   public postDarkTheme(darkTheme: boolean): Observable<{ darkTheme: boolean }> {
     this.requestInProgress = true;
-    return this.http.post<{ darkTheme: boolean }>(`${this.baseUrl}`, { darkTheme }).pipe(
+    return this.http.post<{ darkTheme: boolean }>(`${this.baseUrl}/theme`, { darkTheme }).pipe(
       tap(() => {
         if (this.settings) {
           this.settings.darkTheme = darkTheme;
@@ -70,12 +76,5 @@ export class SettingsService {
 
   private saveSettingsToLocal(settings: Settings): void {
     localStorage.setItem(this.localStorageKey, JSON.stringify(settings));
-  }
-
-  public loadSettings(): void {
-    this.getSettings().subscribe((settings: Settings) => {
-      this.settings = settings;
-      console.log('Settings:', settings);
-    });
   }
 }

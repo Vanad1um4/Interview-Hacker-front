@@ -42,7 +42,7 @@ $dark-theme: mat.define-dark-theme((color: (primary: $dark-primary, accent: $dar
   @apply dark:bg-slate-800
 }
 
-.tw-border {
+.tw-rounded-border {
   @apply rounded-md border-2 border-gray-300 dark:border-gray-700
 }
 

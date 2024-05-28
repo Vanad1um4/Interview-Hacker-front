@@ -36,7 +36,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
     if (this.settingsForm.valid) {
-      const settings = this.settingsForm.value;
+      const formValues = this.settingsForm.value;
+      const settings = {
+        ...formValues,
+        darkTheme: this.settingsService.settings?.darkTheme || false,
+      };
       this.settingsService.postSettings(settings).subscribe();
     }
   }

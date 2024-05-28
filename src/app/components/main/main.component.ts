@@ -3,20 +3,24 @@ import { NgFor } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RecognitionService } from '../../services/recognition.service';
+import { InferenceService } from '../../services/inference.service';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [NgFor, MatButtonModule, MatIconModule],
+  imports: [NgFor, MatButtonModule, MatIconModule, MarkdownModule],
   templateUrl: './main.component.html',
-  // styleUrl: './main.component.scss',
 })
-export class MainComponent implements AfterViewInit, OnDestroy {
+export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sentencesScrollContainer') private sentencesScrollContainer!: ElementRef;
   @ViewChild('dynamicContentWrapper') private dynamicContentWrapper!: ElementRef;
   private resizeObserver!: ResizeObserver;
 
-  constructor(public recognitionService: RecognitionService) {}
+  constructor(
+    public recognitionService: RecognitionService,
+    public inferenceService: InferenceService,
+  ) {}
 
   get sentencesList() {
     return Object.entries(this.recognitionService.sentences$$());
@@ -35,7 +39,15 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     this.recognitionService.stopRecognition();
   }
 
+  startInference() {
+    this.inferenceService.sendInferenceRequest(5);
+  }
+
+  ngOnInit(): void {}
+
   ngAfterViewInit() {
+    this.recognitionService.getLastSentences();
+
     this.resizeObserver = new ResizeObserver(() => {
       this.sentencesScrollContainer.nativeElement.scrollTo({
         top: this.sentencesScrollContainer.nativeElement.scrollHeight,

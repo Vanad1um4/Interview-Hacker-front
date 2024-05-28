@@ -2,8 +2,9 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
 import { BehaviorSubject, timer, of, Subscription, EMPTY } from 'rxjs';
 import { catchError, switchMap, retry } from 'rxjs/operators';
-import { IncomingMessage, Sentence } from '../shared/interfaces';
+import { InferenceData, IncomingMessage, Sentence } from '../shared/interfaces';
 import { RecognitionService } from './recognition.service';
+import { InferenceService } from './inference.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,10 @@ export class NetworkService implements OnDestroy {
   private pingInterval: any;
   private pingIntervalSec: number = 50;
 
-  constructor(private recognitionService: RecognitionService) {
+  constructor(
+    private recognitionService: RecognitionService,
+    private inferenceServive: InferenceService,
+  ) {
     this.connectionStatusSubscription = this.connectionStatus
       .pipe(
         switchMap((isConnected) => {
@@ -91,8 +95,12 @@ export class NetworkService implements OnDestroy {
     // console.log('Received message:', data);
     const key = Object.keys(data).length === 1 ? Object.keys(data)[0] : null;
 
-    if (key === 'sentence') {
-      this.recognitionService.updateSentences(data[key] as Sentence);
+    if (key === 'recognition') {
+      this.recognitionService.handleRecognizedData(data[key] as Sentence);
+    }
+
+    if (key === 'inference') {
+      this.inferenceServive.handleInferenceData(data[key] as InferenceData);
     }
   }
 

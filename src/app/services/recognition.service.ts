@@ -15,14 +15,14 @@ export class RecognitionService {
 
   public getLastSentences() {
     return this.http.get<IncomingMessage>(`${this.baseUrl}/get_last_sentences`).subscribe((data) => {
-      this.updateSentences(data['last_sentences'] as Sentence);
+      this.sentences$$.set({});
+      this.handleRecognizedData(data['last_sentences'] as Sentence);
     });
   }
 
   public startRecognition() {
     this.requestInProgress = true;
     return this.http.get<RecognitionStatus>(`${this.baseUrl}/start`).subscribe((data) => {
-      console.log('Recognition status:', data);
       if (
         data['Recognition status'] === 'Started successfully' ||
         data['Recognition status'] === 'Already in progress'
@@ -38,7 +38,6 @@ export class RecognitionService {
   public stopRecognition() {
     this.requestInProgress = true;
     return this.http.get<RecognitionStatus>(`${this.baseUrl}/stop`).subscribe((data) => {
-      console.log('Recognition status:', data);
       if (data['Recognition status'] === 'Stopped successfully' || data['Recognition status'] === 'Already stopped') {
         this.recognitionInProgress = false;
         this.requestInProgress = false;
@@ -48,7 +47,7 @@ export class RecognitionService {
     });
   }
 
-  public updateSentences(newSentences: Sentence) {
+  public handleRecognizedData(newSentences: Sentence) {
     const currentSentences = this.sentences$$();
     const updatedSentences = { ...currentSentences, ...newSentences };
     this.sentences$$.set(updatedSentences);

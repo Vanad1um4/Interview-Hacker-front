@@ -7,6 +7,7 @@ import { importProvidersFrom } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { NetworkService } from './app/services/network.service';
+import { MarkdownModule } from 'ngx-markdown';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -14,6 +15,7 @@ bootstrapApplication(AppComponent, {
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     importProvidersFrom(BrowserAnimationsModule),
     provideHttpClient(),
+    importProvidersFrom(MarkdownModule.forRoot()),
     NetworkService,
   ],
 }).catch((err) => console.error(err));

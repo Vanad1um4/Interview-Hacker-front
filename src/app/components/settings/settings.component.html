@@ -1,19 +1,18 @@
-<div class="tw-border h-full">
+<div class="tw-rounded-border h-full">
   <div class="wrapper m-4">
-    <h1 class="mb-4 text-2xl font-medium">Settings:</h1>
+    <h1 class="mb-4 text-2xl font-medium">Настройки</h1>
 
     <form class="flex flex-col gap-4" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
       <div class="">
-        <div class="text-lg">Minutes of last sentences to initially load:</div>
-        <mat-form-field class="w-20">
+        <div class="text-lg">Сколько последних минут текста грузить при запуске приложения:</div>
+        <mat-form-field class="w-32">
           <input matInput type="number" formControlName="initLoadLastNMinutes" required />
         </mat-form-field>
       </div>
 
       <div class="kek">
-        <div class="text-lg">Main Prompt:</div>
+        <div class="text-lg">Главный промпт. Отправляется каждый раз вместе с распознанным текстом в ChatGPT.</div>
         <mat-form-field class="w-full">
-          <mat-label>Main Prompt</mat-label>
           <textarea matInput formControlName="mainPrompt" rows="10" required></textarea>
         </mat-form-field>
       </div>

@@ -21,7 +21,6 @@ export class AppComponent {
     public settingsService: SettingsService,
   ) {
     this.networkService.startPing();
-    this.recognitionService.getLastSentences();
-    this.settingsService.loadSettings();
+    this.settingsService.getSettings();
   }
 }
