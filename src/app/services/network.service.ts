@@ -1,10 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+
 import { BehaviorSubject, timer, of, Subscription, EMPTY } from 'rxjs';
 import { catchError, switchMap, retry } from 'rxjs/operators';
-import { InferenceData, IncomingMessage, Sentence } from '../shared/interfaces';
-import { RecognitionService } from './recognition.service';
-import { InferenceService } from './inference.service';
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+
+import { RecognitionService } from 'src/app/services/recognition.service';
+import { InferenceService } from 'src/app/services/inference.service';
+import { InferenceData, IncomingMessage, Sentence } from 'src/app/shared/interfaces';
 
 @Injectable({
   providedIn: 'root',

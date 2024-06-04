@@ -1,9 +1,11 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { SettingsService } from '../../services/settings.service';
+
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-dark-mode-toggle',

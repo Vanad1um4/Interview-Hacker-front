@@ -1,17 +1,42 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
-import { IncomingMessage, RecognitionStatus, Sentence } from '../shared/interfaces';
+import { Injectable, Signal, WritableSignal, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
+import {
+  IncomingMessage,
+  PreppedSentence,
+  RecognitionStatus,
+  Sentence,
+  PreppedSentencesList,
+} from 'src/app/shared/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecognitionService {
   private baseUrl = 'http://127.0.0.1:8000/api/main';
-  public sentences$$: WritableSignal<Sentence> = signal({});
+  public lastNMins$$: WritableSignal<number> = signal(0);
+  private sentences$$: WritableSignal<Sentence> = signal({});
+  public PreppedSentencesList$$: Signal<PreppedSentencesList> = computed(() => this.convertObjectToList());
   public recognitionInProgress: boolean = false;
   public requestInProgress: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // effect(() => { console.log('this.sentences$$()', this.sentences$$()) }); // debugging // prettier-ignore
+    // effect(() => { console.log('this.PreppedSentencesList$$()', this.PreppedSentencesList$$()) }); // debugging // prettier-ignore
+  }
+
+  private convertObjectToList(): PreppedSentencesList {
+    let result: PreppedSentencesList = [];
+    let pastTime = Date.now() - this.lastNMins$$() * 60 * 1000;
+
+    for (let key in this.sentences$$()) {
+      const timestamp = Number(key);
+      const sublist: PreppedSentence = [timestamp, this.sentences$$()[key], pastTime <= timestamp];
+      result.push(sublist);
+    }
+
+    return result;
+  }
 
   public getLastSentences() {
     return this.http.get<IncomingMessage>(`${this.baseUrl}/get_last_sentences`).subscribe((data) => {

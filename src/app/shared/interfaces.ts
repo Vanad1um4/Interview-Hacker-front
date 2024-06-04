@@ -2,6 +2,10 @@ export type Sentence = {
   [key: number]: string;
 };
 
+export type PreppedSentence = [number, string, boolean];
+
+export type PreppedSentencesList = Array<PreppedSentence>;
+
 export type IncomingMessage = {
   [key: string]: Sentence | string;
 };

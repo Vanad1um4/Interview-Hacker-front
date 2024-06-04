@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { InferenceData, IncomingMessage } from '../shared/interfaces';
 import { HttpClient } from '@angular/common/http';
+
+import { InferenceData, IncomingMessage } from 'src/app/shared/interfaces';
 
 @Injectable({
   providedIn: 'root',

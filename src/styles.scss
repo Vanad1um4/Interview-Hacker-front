@@ -26,6 +26,14 @@ $dark-theme: mat.define-dark-theme((color: (primary: $dark-primary, accent: $dar
   letter-spacing: normal !important;
 }
 
+.gpt-button.mdc-button--raised {
+  padding: 0px !important;
+}
+
+.gpt-button.mdc-button {
+  min-width: auto !important;
+}
+
 
 
 // Tailwind

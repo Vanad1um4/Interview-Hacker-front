@@ -1,33 +1,33 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgClass, NgFor } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RecognitionService } from '../../services/recognition.service';
-import { InferenceService } from '../../services/inference.service';
+
+import { RecognitionService } from 'src/app/services/recognition.service';
+import { InferenceService } from 'src/app/services/inference.service';
+
 import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [NgFor, MatButtonModule, MatIconModule, MarkdownModule],
+  imports: [NgFor, NgClass, MatButtonModule, MatIconModule, MarkdownModule],
   templateUrl: './main.component.html',
 })
 export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('sentencesScrollContainer') private sentencesScrollContainer!: ElementRef;
   @ViewChild('dynamicContentWrapper') private dynamicContentWrapper!: ElementRef;
   private resizeObserver!: ResizeObserver;
+  public lastNMinsTimeButtons = [1, 2, 3, 5, 10, 20, 30];
 
   constructor(
     public recognitionService: RecognitionService,
     public inferenceService: InferenceService,
   ) {}
 
-  get sentencesList() {
-    return Object.entries(this.recognitionService.sentences$$());
-  }
-
-  unixTimeToHumanTime(ts: string): string {
-    const date = new Date(Number(ts));
+  unixTimeToHumanTime(ts: number): string {
+    const date = new Date(ts);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
   }
 
@@ -39,8 +39,12 @@ export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
     this.recognitionService.stopRecognition();
   }
 
-  startInference() {
-    this.inferenceService.sendInferenceRequest(5);
+  startInference(mins: number) {
+    this.inferenceService.sendInferenceRequest(mins);
+  }
+
+  updateSentencesBackground(mins: number) {
+    this.recognitionService.lastNMins$$.set(mins);
   }
 
   ngOnInit(): void {}

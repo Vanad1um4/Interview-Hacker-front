@@ -1,11 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SettingsService } from '../../services/settings.service';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-settings',
